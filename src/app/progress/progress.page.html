@@ -1,0 +1,79 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        ← Atrás
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Progreso</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goHome()">
+        🏠 Home
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Progreso</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="progress-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Progreso Semanal</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let day of weeklyProgress">
+            <ion-label>
+              <h3>{{ day.day }}</h3>
+              <p>{{ day.completed }}/{{ day.total }} ejercicios completados</p>
+            </ion-label>
+            <ion-badge 
+              slot="end" 
+              [color]="day.percentage === 100 ? 'success' : day.percentage >= 50 ? 'warning' : 'danger'">
+              {{ day.percentage }}%
+            </ion-badge>
+          </ion-item>
+        </ion-list>
+
+        <div style="margin-top: 20px;">
+          <h4>Progreso General</h4>
+          <ion-progress-bar 
+            [value]="getOverallProgress()" 
+            color="primary">
+          </ion-progress-bar>
+          <p style="text-align: center; margin-top: 10px;">
+            {{ Math.round(getOverallProgress() * 100) }}% completado esta semana
+          </p>
+        </div>
+
+        <ion-button 
+          expand="block" 
+          (click)="goToWorkout()" 
+          style="margin-top: 20px;">
+          Continuar Rutina
+        </ion-button>
+        
+        <div class="navigation-buttons">
+          <ion-button 
+            fill="outline" 
+            (click)="goBack()" 
+            style="margin-top: 10px; margin-right: 5px;">
+            ← Atrás
+          </ion-button>
+          <ion-button 
+            fill="outline" 
+            (click)="goHome()" 
+            style="margin-top: 10px; margin-left: 5px;">
+            🏠 Home
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

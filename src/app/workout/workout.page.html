@@ -1,0 +1,75 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        ← Atrás
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Rutina de Ejercicios</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goHome()">
+        🏠 Home
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Rutina de Ejercicios</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="workout-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Tu Rutina de Hoy</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item *ngFor="let exercise of exercises; let i = index">
+            <ion-label>
+              <h3>{{ exercise.name }}</h3>
+              <p>{{ exercise.sets }} series x {{ exercise.reps }} repeticiones</p>
+            </ion-label>
+            <ion-badge 
+              slot="end" 
+              [color]="exercise.completed ? 'success' : 'medium'">
+              {{ exercise.completed ? 'Completado' : 'Pendiente' }}
+            </ion-badge>
+            <ion-button 
+              slot="end" 
+              fill="outline" 
+              size="small"
+              (click)="toggleExercise(i)">
+              {{ exercise.completed ? 'Desmarcar' : 'Completar' }}
+            </ion-button>
+          </ion-item>
+        </ion-list>
+
+        <ion-button 
+          expand="block" 
+          (click)="goToProgress()" 
+          style="margin-top: 20px;">
+          Ver Progreso
+        </ion-button>
+        
+        <div class="navigation-buttons">
+          <ion-button 
+            fill="outline" 
+            (click)="goBack()" 
+            style="margin-top: 10px; margin-right: 5px;">
+            ← Atrás
+          </ion-button>
+          <ion-button 
+            fill="outline" 
+            (click)="goHome()" 
+            style="margin-top: 10px; margin-left: 5px;">
+            🏠 Home
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

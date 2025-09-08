@@ -1,0 +1,134 @@
+.progress-container {
+  padding: 20px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+ion-card {
+  animation: slideInUp 0.8s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+ion-card-title {
+  text-align: center;
+  color: var(--ion-color-primary);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+ion-item {
+  --padding-start: 0;
+  animation: slideInLeft 0.6s ease-out;
+  animation-fill-mode: both;
+}
+
+ion-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+ion-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+ion-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+ion-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+ion-item:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+ion-item:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+ion-item:nth-child(7) {
+  animation-delay: 0.7s;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+h3 {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+p {
+  color: var(--ion-color-medium);
+  margin: 0;
+}
+
+h4 {
+  color: var(--ion-color-primary);
+  margin-bottom: 10px;
+  animation: slideInUp 0.8s ease-out;
+  animation-delay: 0.8s;
+  animation-fill-mode: both;
+}
+
+ion-progress-bar {
+  animation: slideInUp 0.8s ease-out;
+  animation-delay: 1s;
+  animation-fill-mode: both;
+}
+
+ion-button {
+  animation: slideInUp 0.8s ease-out;
+  animation-delay: 1.2s;
+  animation-fill-mode: both;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.navigation-buttons ion-button {
+  flex: 1;
+  animation: slideInUp 0.8s ease-out;
+  animation-delay: 1.4s;
+  animation-fill-mode: both;
+}

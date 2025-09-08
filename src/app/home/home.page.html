@@ -1,0 +1,32 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Fitness Tracker
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Fitness Tracker</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+    <strong>¡Bienvenido a tu rutina de ejercicios!</strong>
+    <p>Monitorea tu progreso y mantén la motivación</p>
+    
+    <ion-button expand="block" (click)="navigateToWorkout()" style="margin-top: 20px;">
+      Iniciar Rutina
+    </ion-button>
+    
+    <ion-button expand="block" (click)="navigateToProgress()" style="margin-top: 10px;">
+      Ver Progreso
+    </ion-button>
+    
+    <ion-button expand="block" (click)="navigateToLogin()" style="margin-top: 10px;" fill="outline">
+      Login
+    </ion-button>
+  </div>
+</ion-content>
