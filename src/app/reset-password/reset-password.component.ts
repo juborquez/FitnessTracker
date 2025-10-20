@@ -3,22 +3,25 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { 
-  IonContent, 
-  IonHeader, 
-  IonTitle, 
-  IonToolbar, 
-  IonCard, 
-  IonCardContent, 
-  IonItem, 
-  IonLabel, 
-  IonInput, 
+import {
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonCard,
+  IonCardContent,
+  IonItem,
+  IonLabel,
+  IonInput,
   IonButton,
-  IonIcon,
   IonButtons,
   IonToast,
-  AlertController
+  AlertController,
+  IonIcon
 } from '@ionic/angular/standalone';
+
+import { AuthService } from '../services/auth.service';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -26,21 +29,21 @@ import {
   styleUrls: ['./reset-password.component.scss'],
   standalone: true,
   imports: [
-    IonContent, 
-    IonHeader, 
-    IonTitle, 
-    IonToolbar, 
-    IonCard, 
-    IonCardContent, 
-    IonItem, 
-    IonLabel, 
-    IonInput, 
+    CommonModule,
+    FormsModule,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonCard,
+    IonCardContent,
+    IonItem,
+    IonLabel,
+    IonInput,
     IonButton,
-    IonIcon,
     IonButtons,
     IonToast,
-    CommonModule, 
-    FormsModule
+    IonIcon
   ]
 })
 export class ResetPasswordComponent implements OnInit {
@@ -50,43 +53,35 @@ export class ResetPasswordComponent implements OnInit {
   toastColor: string = 'success';
   isEmailSent: boolean = false;
 
-  // Emails válidos para simulación (sin BD)
-  private validEmails = [
-    'admin@gym.com',
-    'user@gym.com', 
-    'demo@gym.com',
-    'test@example.com'
-  ];
-
   constructor(
-    private router: Router, 
-    private location: Location, 
-    private alertController: AlertController
+    private router: Router,
+    private location: Location,
+    private alertController: AlertController,
+    private authService: AuthService,
+    private apiService: ApiService
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Inicialización si es necesaria
+  }
 
   async resetPassword() {
-    // Validación de campo vacío
     if (!this.email.trim()) {
       this.showToast('Por favor, ingresa tu email', 'warning');
       return;
     }
 
-    // Validación de formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.email.trim())) {
       this.showToast('Por favor, ingresa un email válido', 'warning');
       return;
     }
 
-    // Verificar si el email existe en la lista de válidos
-    const emailExists = this.validEmails.includes(this.email.trim().toLowerCase());
-
-    if (emailExists) {
+    try {
+      await this.apiService.post('auth/reset-password', { email: this.email.trim() });
       this.isEmailSent = true;
       this.showToast('Se ha enviado un enlace de restablecimiento a tu email', 'success');
-    } else {
+    } catch (error) {
       this.showToast('Email no encontrado en el sistema', 'danger');
     }
   }

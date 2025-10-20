@@ -18,6 +18,8 @@ import {
   IonToast,
   AlertController
 } from '@ionic/angular/standalone';
+import { AuthService } from '../services/auth.service';
+import { DatabaseService } from '../services/database.service';
 
 @Component({
   selector: 'app-login',
@@ -55,7 +57,13 @@ export class LoginPage implements OnInit {
     { username: 'demo', password: 'demo123' }
   ];
 
-  constructor(private router: Router, private location: Location, private alertController: AlertController) { }
+  constructor(
+    private router: Router,
+    private location: Location,
+    private alertController: AlertController,
+    private authService: AuthService,
+    private dbService: DatabaseService
+  ) { }
 
   ngOnInit() {
   }
@@ -67,18 +75,22 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    // Validación de usuario y contraseña
-    const user = this.validUsers.find(u => 
-      u.username === this.username.trim() && u.password === this.password
-    );
+    try {
+      // Intentar autenticar con el servicio
+      await this.authService.login(this.username, this.password);
+      
+      // Guardar información en la base de datos local
+      await this.dbService.insert('users', {
+        email: this.username,
+        name: this.username // Por simplicidad usamos el email como nombre
+      });
 
-    if (user) {
       this.showToast('¡Inicio de sesión exitoso!', 'success');
-      // Simular un pequeño delay para mostrar el mensaje de éxito
+      
       setTimeout(() => {
         this.router.navigate(['/home']);
       }, 1500);
-    } else {
+    } catch (error) {
       this.showToast('Usuario o contraseña incorrectos', 'danger');
       this.password = ''; // Limpiar contraseña por seguridad
     }

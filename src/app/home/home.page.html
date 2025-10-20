@@ -3,15 +3,21 @@
     <ion-title>
       Fitness Tracker
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        Cerrar Sesión
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Fitness Tracker</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-card *ngIf="userData">
+    <ion-card-content>
+      <h2>Bienvenido, {{ userData.name }}</h2>
+      <p>Email: {{ userData.email }}</p>
+    </ion-card-content>
+  </ion-card>
 
   <div id="container">
     <strong>¡Bienvenido a tu rutina de ejercicios!</strong>

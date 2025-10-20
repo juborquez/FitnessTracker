@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <style>
+    .primary { fill: var(--ion-color-primary, #3880ff); }
+    .secondary { fill: var(--ion-color-secondary, #3dc2ff); }
+    .medium { fill: var(--ion-color-medium, #92949c); }
+  </style>
+  <g>
+    <path class="primary" d="M250,100 L100,200 L100,400 L400,400 L400,200 Z"/>
+    <rect class="secondary" x="150" y="250" width="50" height="150"/>
+    <rect class="secondary" x="300" y="200" width="50" height="200"/>
+    <circle class="medium" cx="250" cy="150" r="30"/>
+    <path class="medium" d="M200,300 L300,300 L250,250 Z"/>
+  </g>
+</svg>
