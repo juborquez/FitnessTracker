@@ -39,7 +39,6 @@ import {
     IonItem, 
     IonLabel, 
     IonButton,
-    IonIcon,
     IonList,
     IonBadge,
     IonProgressBar,

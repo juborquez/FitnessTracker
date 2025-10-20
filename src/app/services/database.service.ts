@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
+import { Capacitor } from '@capacitor/core';
+import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DatabaseService {
-  private database!: SQLiteObject;
+  private sqlite: SQLiteConnection;
+  private db!: SQLiteDBConnection;
   private dbReady = new BehaviorSubject<boolean>(false);
 
-  constructor(
-    private platform: Platform,
-    private sqlite: SQLite
-  ) {
+  constructor(private platform: Platform) {
+    this.sqlite = new SQLiteConnection(CapacitorSQLite);
     this.platform.ready().then(() => {
       this.initializeDatabase();
     });
@@ -22,12 +22,21 @@ export class DatabaseService {
   // Inicializar la base de datos
   private async initializeDatabase() {
     try {
-      this.database = await this.sqlite.create({
-        name: 'fitness_tracker.db',
-        location: 'default'
-      });
+      const dbSetupDone = await this.sqlite.isConnection('fitness_tracker', false);
+      if (dbSetupDone.result) {
+        this.db = await this.sqlite.retrieveConnection('fitness_tracker', false);
+      } else {
+        this.db = await this.sqlite.createConnection(
+          'fitness_tracker',
+          false,
+          'no-encryption',
+          1,
+          false
+        );
+      }
+      await this.db.open();
       await this.createTables();
-      this.isDbReady = true;
+      this.dbReady.next(true);
     } catch (error) {
       console.error('Error al inicializar la base de datos:', error);
     }
@@ -87,7 +96,7 @@ export class DatabaseService {
     ];
 
     for (const sql of tables) {
-      await this.database.executeSql(sql, []);
+      await this.db.run(sql, []);
     }
   }
 
@@ -102,18 +111,14 @@ export class DatabaseService {
     ];
 
     for (const index of indices) {
-      await this.database.executeSql(index, []);
+      await this.db.run(index, []);
     }
   }
 
   // Método para ejecutar consultas SQL personalizadas
   async query(sql: string, params: any[] = []): Promise<any[]> {
-    const result = await this.database.executeSql(sql, params);
-    const items: any[] = [];
-    for (let i = 0; i < result.rows.length; i++) {
-      items.push(result.rows.item(i));
-    }
-    return items;
+    const result = await this.db.query(sql, params);
+    return result.values || [];
   }
 
   // Métodos CRUD mejorados
@@ -123,8 +128,8 @@ export class DatabaseService {
     const placeholders = values.map(() => '?').join(',');
     const sql = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`;
     
-    const result = await this.database.executeSql(sql, values);
-    return result.insertId;
+    const result = await this.db.run(sql, values);
+    return result.changes?.lastId || 0;
   }
 
   async update(table: string, data: any, whereClause: string, whereArgs: any[]): Promise<number> {
@@ -132,14 +137,14 @@ export class DatabaseService {
     const values = [...Object.values(data), ...whereArgs];
     const sql = `UPDATE ${table} SET ${setClause} WHERE ${whereClause}`;
     
-    const result = await this.database.executeSql(sql, values);
-    return result.rowsAffected;
+    const result = await this.db.run(sql, values);
+    return result.changes?.changes || 0;
   }
 
   async delete(table: string, whereClause: string, whereArgs: any[]): Promise<number> {
     const sql = `DELETE FROM ${table} WHERE ${whereClause}`;
-    const result = await this.database.executeSql(sql, whereArgs);
-    return result.rowsAffected;
+    const result = await this.db.run(sql, whereArgs);
+    return result.changes?.changes || 0;
   }
 
   // Métodos de gestión de base de datos
@@ -148,20 +153,22 @@ export class DatabaseService {
   }
 
   async clearTable(table: string): Promise<void> {
-    await this.database.executeSql(`DELETE FROM ${table}`, []);
+    await this.db.run(`DELETE FROM ${table}`, []);
   }
 
   async dropTable(table: string): Promise<void> {
-    await this.database.executeSql(`DROP TABLE IF EXISTS ${table}`, []);
+    await this.db.run(`DROP TABLE IF EXISTS ${table}`, []);
   }
 
   async vacuum(): Promise<void> {
-    await this.database.executeSql('VACUUM', []);
+    await this.db.run('VACUUM', []);
   }
 
   // Método para realizar backup de la base de datos
   async backup(): Promise<void> {
-    // Implementar lógica de backup según necesidades
-    console.log('Backup functionality to be implemented');
+    if (Capacitor.isNativePlatform()) {
+      // TODO: Implementar backup usando el método apropiado
+      console.log('Database backup to be implemented');
+    }
   }
 }

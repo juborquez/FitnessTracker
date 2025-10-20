@@ -24,7 +24,7 @@ export class HomePage implements OnInit {
   async ngOnInit() {
     try {
       // Obtener datos del usuario desde la base de datos local
-      const users = await this.dbService.select('users', '', []);
+      const users = await this.dbService.query('SELECT * FROM users');
       if (users.length > 0) {
         this.userData = users[0];
       }

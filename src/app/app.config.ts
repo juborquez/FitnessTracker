@@ -3,13 +3,13 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { IonicModule } from '@ionic/angular';
 import { provideHttpClient } from '@angular/common/http';
-import { SQLite } from '@ionic-native/sqlite/ngx';
+import { CapacitorSQLite } from '@capacitor-community/sqlite';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     importProvidersFrom(IonicModule.forRoot()),
     provideHttpClient(),
-    SQLite
+    { provide: 'CapacitorSQLite', useValue: CapacitorSQLite }
   ],
 };
