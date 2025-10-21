@@ -16,6 +16,7 @@ import {
   IonButton,
   IonButtons,
   IonToast,
+  IonSpinner,
   AlertController
 } from '@ionic/angular/standalone';
 import { AuthService } from '../services/auth.service';
@@ -39,15 +40,17 @@ import { DatabaseService } from '../services/database.service';
     IonButton,
     IonButtons,
     IonToast,
+    IonSpinner,
     CommonModule, 
     FormsModule
   ]
 })
 export class LoginPage implements OnInit {
-  username: string = '';
+  email: string = '';
   password: string = '';
   isToastOpen: boolean = false;
   toastMessage: string = '';
+  isRegistering: boolean = false;
   toastColor: string = 'danger';
 
   // Usuarios válidos para validación simple (sin BD)
@@ -66,24 +69,22 @@ export class LoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log('LoginPage initialized');
+    this.dbService.isDatabaseReady().subscribe(isReady => {
+      console.log('Database ready status:', isReady);
+    });
   }
 
   async login() {
     // Validación de campos vacíos
-    if (!this.username.trim() || !this.password.trim()) {
+    if (!this.email.trim() || !this.password.trim()) {
       this.showToast('Por favor, completa todos los campos', 'warning');
       return;
     }
 
     try {
       // Intentar autenticar con el servicio
-      await this.authService.login(this.username, this.password);
-      
-      // Guardar información en la base de datos local
-      await this.dbService.insert('users', {
-        email: this.username,
-        name: this.username // Por simplicidad usamos el email como nombre
-      });
+      await this.authService.login(this.email, this.password);
 
       this.showToast('¡Inicio de sesión exitoso!', 'success');
       
@@ -131,6 +132,28 @@ export class LoginPage implements OnInit {
 
   goHome() {
     this.router.navigate(['/home']);
+  }
+
+  async register() {
+    this.isRegistering = true;
+    try {
+      const result = await this.authService.register({
+        email: this.email,
+        password: this.password,
+        name: 'New User',
+        role: 'user'
+      }).toPromise();
+      
+      console.log('Registro exitoso:', result);
+      this.toastMessage = 'Registro exitoso. Ahora puedes iniciar sesión.';
+      this.isToastOpen = true;
+    } catch (error) {
+      console.error('Error en el registro:', error);
+      this.toastMessage = 'Error en el registro. Por favor, intenta de nuevo.';
+      this.isToastOpen = true;
+    } finally {
+      this.isRegistering = false;
+    }
   }
 
 }

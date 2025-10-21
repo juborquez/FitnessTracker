@@ -28,11 +28,11 @@
         <p>Accede a tu rutina de ejercicios</p>
         
         <ion-item>
-          <ion-label position="stacked">Usuario</ion-label>
+          <ion-label position="stacked">Email</ion-label>
           <ion-input 
-            [(ngModel)]="username" 
-            placeholder="Ingresa tu usuario"
-            type="text">
+            [(ngModel)]="email" 
+            placeholder="Ingresa tu email"
+            type="email">
           </ion-input>
         </ion-item>
 
@@ -45,44 +45,37 @@
           </ion-input>
         </ion-item>
 
-        <ion-button 
-          expand="block" 
-          (click)="login()" 
-          style="margin-top: 20px;">
-          Iniciar Sesión
-        </ion-button>
+        <div class="ion-padding">
+          <ion-button expand="block" (click)="login()" [disabled]="isRegistering">
+            Iniciar Sesión
+          </ion-button>
 
-        <div class="auth-links" style="text-align: center; margin-top: 15px;">
-          <ion-button 
-            fill="clear" 
-            size="small"
-            (click)="goToResetPassword()">
-            ¿Olvidaste tu contraseña?
+          <ion-button expand="block" (click)="register()" fill="outline" [disabled]="isRegistering">
+            Registrarse
           </ion-button>
-        </div>
 
-        <div class="demo-info" style="text-align: center; margin-top: 10px;">
-          <ion-button 
-            fill="clear" 
-            size="small"
-            (click)="showValidUsers()">
-            Ver usuarios de prueba
-          </ion-button>
-        </div>
-        
-        <div class="navigation-buttons">
-          <ion-button 
-            fill="outline" 
-            (click)="goBack()" 
-            style="margin-top: 10px; margin-right: 5px;">
-            ← Atrás
-          </ion-button>
-          <ion-button 
-            fill="outline" 
-            (click)="goHome()" 
-            style="margin-top: 10px; margin-left: 5px;">
-            🏠 Home
-          </ion-button>
+          <div *ngIf="isRegistering" class="ion-text-center ion-padding-top">
+            <ion-spinner></ion-spinner>
+            <p>Registrando usuario...</p>
+          </div>
+
+          <div class="auth-links ion-text-center ion-padding-top">
+            <ion-button 
+              fill="clear" 
+              size="small"
+              (click)="goToResetPassword()">
+              ¿Olvidaste tu contraseña?
+            </ion-button>
+          </div>
+
+          <div class="demo-info ion-text-center ion-padding-top">
+            <ion-button 
+              fill="clear" 
+              size="small"
+              (click)="showValidUsers()">
+              Ver usuarios de prueba
+            </ion-button>
+          </div>
         </div>
       </ion-card-content>
     </ion-card>

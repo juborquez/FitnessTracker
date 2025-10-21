@@ -16,10 +16,20 @@
 
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <!-- SQLite Web Elements -->
+  <script src="https://cdn.jsdelivr.net/npm/jeep-sqlite/dist/jeep-sqlite.min.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const jeepEl = document.createElement('jeep-sqlite');
+      document.body.appendChild(jeepEl);
+    });
+  </script>
 </head>
 
 <body>
   <app-root></app-root>
+  <jeep-sqlite></jeep-sqlite>
 </body>
 
 </html>

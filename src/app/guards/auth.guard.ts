@@ -91,23 +91,29 @@ export class AuthGuard implements CanActivate {
 
   private async checkSessionValid(): Promise<boolean> {
     const token = this.authService.getToken();
-    if (!token) return false;
-
-    // Verificar si el token ha expirado
-    if (this.isTokenExpired(token)) {
-      await this.handleExpiredToken();
+    if (!token) {
+      console.log('No hay token de sesión');
       return false;
     }
 
-    return true;
-  }
-
-  private isTokenExpired(token: string): boolean {
     try {
-      const tokenData = JSON.parse(atob(token.split('.')[1]));
-      return tokenData.exp * 1000 < Date.now();
-    } catch {
+      const userData = JSON.parse(atob(token));
+      if (!userData || !userData.id || !userData.email) {
+        console.log('Token inválido o incompleto');
+        return false;
+      }
+      
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser) {
+        console.log('No hay usuario actual en el servicio de auth');
+        return false;
+      }
+
+      console.log('Sesión válida para:', userData.email);
       return true;
+    } catch (error) {
+      console.error('Error validando sesión:', error);
+      return false;
     }
   }
 
